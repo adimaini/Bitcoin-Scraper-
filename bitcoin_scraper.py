@@ -5,14 +5,20 @@ import time
 import boto3
 from botocore.exceptions import ClientError
 
-RATE_THRESHOLD = 10000
 SENDER = 'eddiemaini@gmail.com'
 RECIPIENT = 'adimaini@vt.edu'
 AWS_REGION = 'us-east-1'
 
 
+def rate_input(): 
+    print("What would you like the Bitcoin USD threshold to be after which you will get alerts?")
+    rate_threshold = float(input())
+    assert type(rate_threshold) is int or float, "rate_threshold is not a float or integer type"
+    return rate_threshold
+
+
 def check_rate(rate):
-    if rate > RATE_THRESHOLD:
+    if rate > rate_threshold:
         return True 
     else: return False 
 
@@ -72,7 +78,7 @@ def email_me(rate):
         print("Email sent! Message ID:"),
         print(response['MessageId'])
 
-
+rate_threshold = rate_input()
 
 while True: 
     # pull the coinbase API and store the dict in 'response'
@@ -84,6 +90,6 @@ while True:
     if check_rate(rate): email_me(rate)
 
     # wait some time before looping again
-    time.sleep(30)
+    time.sleep(60*60)
 
 
